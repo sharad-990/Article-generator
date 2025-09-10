@@ -1,0 +1,14 @@
+# Multi-stage build for React + Spring Boot
+FROM node:18-alpine AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build
+
+FROM openjdk:21-jdk-slim
+WORKDIR /app
+COPY target/*.jar app.jar
+COPY --from=frontend-build /app/frontend/build ./static
+EXPOSE 8080
+CMD ["java", "-jar", "app.jar"]
