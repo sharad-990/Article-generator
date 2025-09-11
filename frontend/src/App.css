@@ -3,8 +3,23 @@
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
+.app-layout {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 20px;
+}
+
 .main-content {
-  padding: 40px 0;
+  flex: 1;
+  padding: 40px 20px;
+  min-width: 0; /* Prevents flex item from overflowing */
+}
+
+.sidebar {
+  flex: 0 0 auto;
+  width: 350px;
 }
 
 .hero {
@@ -33,6 +48,17 @@
   margin: 0 auto;
 }
 
+@media (max-width: 1200px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    order: -1; /* Show sidebar first on mobile */
+  }
+}
+
 @media (max-width: 768px) {
   .hero h1 {
     font-size: 2rem;
@@ -43,6 +69,10 @@
   }
   
   .main-content {
-    padding: 20px 0;
+    padding: 20px 10px;
+  }
+  
+  .app-layout {
+    gap: 10px;
   }
 }

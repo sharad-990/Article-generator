@@ -22,7 +22,16 @@ public class ArticleController {
     public ResponseEntity<ArticleGenerationResponse> generateArticles(
             @Valid @RequestBody ArticleGenerationRequest request) {
         try {
-            List<ArticleResponse> articles = articleGenerationService.generateArticles(request.getInput());
+            // Additional validation
+            if (request.getInput() == null || request.getInput().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(ArticleGenerationResponse.builder()
+                    .articles(List.of())
+                    .success(false)
+                    .message("Input text is required and cannot be empty")
+                    .build());
+            }
+            
+            List<ArticleResponse> articles = articleGenerationService.generateArticles(request.getInput().trim());
             
             return ResponseEntity.ok(ArticleGenerationResponse.builder()
                 .articles(articles)

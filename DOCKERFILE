@@ -8,7 +8,28 @@ RUN npm run build
 
 FROM openjdk:21-jdk-slim
 WORKDIR /app
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
+# Copy Maven files first (for better caching)
+COPY pom.xml ./
+COPY src ./src
+
+# Build the Spring Boot application
+RUN mvn clean package -DskipTests
+
+# Copy the built JAR file
 COPY target/*.jar app.jar
+
+# Copy frontend build from the first stage
 COPY --from=frontend-build /app/frontend/build ./static
+
+# Expose port 8080
 EXPOSE 8080
+
+# Set environment variables for production
+ENV SPRING_PROFILES_ACTIVE=production
+
+# Run the application
 CMD ["java", "-jar", "app.jar"]

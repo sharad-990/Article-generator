@@ -1,0 +1,46 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+DEPLOYMENT.md
+CONFIGURATION.md
+HELP.md
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node modules (will be installed in container)
+frontend/node_modules/
+
+# Maven target (will be built in container)
+target/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build scripts
+deploy.bat
+start-backend.bat
+start-frontend.bat
+
+# Docker files
+Dockerfile
+.dockerignore
