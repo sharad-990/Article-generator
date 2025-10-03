@@ -18,15 +18,17 @@ public class TrendingController {
     private TrendingArticlesService trendingArticlesService;
 
     @GetMapping("/trending")
-    public ResponseEntity<Map<String, Object>> getTrendingArticles() {
+    public ResponseEntity<Map<String, Object>> getTrendingArticles(
+            @RequestParam(required = false, defaultValue = "all") String category) {
         try {
-            List<ArticleResponse> trendingArticles = trendingArticlesService.getTrendingArticles();
+            List<ArticleResponse> trendingArticles = trendingArticlesService.getTrendingArticles(category);
             
             return ResponseEntity.ok(Map.of(
                 "articles", trendingArticles,
                 "success", true,
                 "message", "Trending articles retrieved successfully",
-                "count", trendingArticles.size()
+                "count", trendingArticles.size(),
+                "category", category
             ));
             
         } catch (Exception e) {
@@ -35,22 +37,25 @@ public class TrendingController {
                 "articles", List.of(),
                 "success", false,
                 "message", "Error retrieving trending articles: " + e.getMessage(),
-                "count", 0
+                "count", 0,
+                "category", category
             ));
         }
     }
 
     @PostMapping("/trending/refresh")
-    public ResponseEntity<Map<String, Object>> refreshTrendingArticles() {
+    public ResponseEntity<Map<String, Object>> refreshTrendingArticles(
+            @RequestParam(required = false, defaultValue = "all") String category) {
         try {
             // Force refresh by clearing cache
-            List<ArticleResponse> trendingArticles = trendingArticlesService.getTrendingArticles();
+            List<ArticleResponse> trendingArticles = trendingArticlesService.getTrendingArticles(category);
             
             return ResponseEntity.ok(Map.of(
                 "articles", trendingArticles,
                 "success", true,
                 "message", "Trending articles refreshed successfully",
-                "count", trendingArticles.size()
+                "count", trendingArticles.size(),
+                "category", category
             ));
             
         } catch (Exception e) {
@@ -59,7 +64,8 @@ public class TrendingController {
                 "articles", List.of(),
                 "success", false,
                 "message", "Error refreshing trending articles: " + e.getMessage(),
-                "count", 0
+                "count", 0,
+                "category", category
             ));
         }
     }

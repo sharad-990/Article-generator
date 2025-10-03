@@ -1,8 +1,8 @@
 .article-card {
-  background: white;
+  background: #111111;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e1e5e9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-primary);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -17,8 +17,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e1e5e9;
+  background: var(--bg-glass-dark);
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .article-number {
@@ -66,7 +66,7 @@
 .article-title {
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
   line-height: 1.4;
   margin: 0;
   flex: 1;
@@ -75,7 +75,7 @@
 
 .article-subtitle {
   font-size: 16px;
-  color: #666;
+  color: #e5e7eb;
   line-height: 1.5;
   margin: 0;
   flex: 1;
@@ -111,7 +111,7 @@
 }
 
 .article-excerpt {
-  color: #666;
+  color: #ffffff;
   line-height: 1.6;
   font-size: 14px;
 }
@@ -126,7 +126,7 @@
 }
 
 .markdown-content {
-  color: #333;
+  color: #ffffff;
   line-height: 1.6;
 }
 
@@ -138,7 +138,7 @@
 .markdown-content h6 {
   margin-top: 24px;
   margin-bottom: 12px;
-  color: #333;
+  color: #ffffff;
 }
 
 .markdown-content h1 {
@@ -168,6 +168,16 @@
 
 .markdown-content li {
   margin-bottom: 4px;
+}
+
+.markdown-content strong {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.markdown-content em {
+  font-style: italic;
+  color: #ffffff;
 }
 
 .article-actions {
@@ -204,6 +214,71 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Export Actions Styles */
+.article-export-actions {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(102, 126, 234, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.export-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  margin-bottom: 8px;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-export {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  color: #2c3e50;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.btn-export::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.btn-export:hover::before {
+  left: 100%;
+}
+
+.btn-export:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.btn-export:active {
+  transform: translateY(0);
+}
+
 @media (max-width: 768px) {
   .article-actions {
     flex-direction: column;
@@ -212,4 +287,25 @@
   .article-actions .btn {
     width: 100%;
   }
+
+  .export-buttons {
+    flex-direction: column;
+  }
+  
+  .btn-export {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+/* Button Styles */
+.btn-info {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+  box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+}
+
+.btn-info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
 }

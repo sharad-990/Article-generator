@@ -22,18 +22,25 @@ public class ArticleGenerationService {
 
     @Value("${spring.ai.google.ai.api-key}")
     private String apiKey;
-    
+
+    @Autowired
+    private ArticleService articleService;
     
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
 
     public List<ArticleResponse> generateArticles(String input) {
+        return generateArticles(input, "medium", "engaging", "general", "all");
+    }
+
+    public List<ArticleResponse> generateArticles(String input, String length, String tone, String template, String category) {
         System.out.println("Starting article generation for input: " + input);
+        System.out.println("Parameters - Length: " + length + ", Tone: " + tone + ", Template: " + template + ", Category: " + category);
         List<ArticleResponse> articles = new ArrayList<>();
         
         for (int i = 0; i < 3; i++) {
             System.out.println("Generating article " + (i + 1) + " of 3");
-            ArticleResponse article = generateSingleArticle(input, i + 1);
+            ArticleResponse article = generateSingleArticle(input, length, tone, template, category, i + 1);
             if (article != null) {
                 articles.add(article);
                 System.out.println("Successfully generated article " + (i + 1));
@@ -46,73 +53,10 @@ public class ArticleGenerationService {
         return articles;
     }
 
-    private ArticleResponse generateSingleArticle(String input, int articleNumber) {
+    private ArticleResponse generateSingleArticle(String input, String length, String tone, String template, String category, int articleNumber) {
         System.out.println("Generating article " + articleNumber + " for input: " + input);
         try {
-        String prompt = String.format("""
-            You are a 24-year-old content creator and blogger who writes in a super engaging, funny, and relatable way. 
-            Write about: "%s" as if you're a real person sharing personal experiences and thoughts.
-            
-            WRITE LIKE A REAL PERSON - THESE ARE NON-NEGOTIABLE:
-            1. Word count: EXACTLY 1000-1200 words
-            2. Use "OMG", "literally", "honestly", "like", "so", "totally", "actually"
-            3. Include personal stories and embarrassing moments
-            4. Use emojis in your writing (but not too many)
-            5. Write like you're texting a close friend
-            6. Include random tangents and side thoughts
-            7. Use "dude", "friend", "pal" occasionally (not gender-specific)
-            8. Share your real opinions (even if controversial)
-            9. Include specific details about your life, age, location, etc.
-            10. Use incomplete sentences and run-on sentences
-            11. Include your actual thoughts and feelings
-            12. Make it suspenseful and engaging
-            13. Add humor and make people laugh
-            14. Include some drama and personal struggles
-            15. Write in first person throughout
-            16. Address everyone, not just one gender
-            17. Create catchy titles WITHOUT starting with "LISTEN," "SERIOUSLY," "HERE'S THE TRUTH," etc.
-            
-            CONTENT STYLE - BE ENTERTAINING:
-            - Start with a hook that makes people want to keep reading
-            - Include personal anecdotes and stories
-            - Add suspense and drama
-            - Make it funny and relatable
-            - Include some tea or drama
-            - Share your real experiences (make them up but make them believable)
-            - Use conversational language
-            - Include your actual thoughts and opinions
-            - Make it informative but fun
-            - End with a personal takeaway or call-to-action
-            
-            TITLE EXAMPLES (NO "LISTEN," "SERIOUSLY," etc.):
-            - "WHY I'M NOT BUYING THE IPHONE 17 (AND YOU SHOULDN'T EITHER)"
-            - "THE AI TOOLS THAT ACTUALLY CHANGED MY LIFE IN 2024"
-            - "CRYPTO MADE ME RICH - HERE'S WHAT I WISH I KNEW SOONER"
-            - "REMOTE WORK IS KILLING MY SOCIAL LIFE (BUT I LOVE IT)"
-            - "SUSTAINABLE FASHION IS A LIE - HERE'S THE TRUTH"
-            
-            FORMATTING:
-            - Use ALL CAPS for headings (no markdown)
-            - Use dashes (-) for bullet points
-            - NO markdown symbols whatsoever
-            - Write like you're actually typing this on your phone
-            
-            PERSONALITY TRAITS TO INCLUDE:
-            - You're 24, live in a big city, love coffee, have a cat
-            - You're into tech but also fashion and lifestyle
-            - You're honest about your mistakes and failures
-            - You're funny and sarcastic but also caring
-            - You're not perfect and you admit it
-            - You're relatable and down-to-earth
-            - You're inclusive and speak to everyone
-            
-            Format the response as JSON:
-            {
-                "title": "Your catchy, engaging title here",
-                "subtitle": "Your engaging, relatable subtitle here", 
-                "content": "Your 1000-1200 word article written like a real person with NO markdown symbols"
-            }
-            """, input);
+            String prompt = buildPrompt(input, length, tone, template, category);
 
             String response = callGoogleAI(prompt);
             System.out.println("Raw API response: " + response);
@@ -215,7 +159,7 @@ public class ArticleGenerationService {
                     .title(title)
                     .subtitle(subtitle)
                     .content(content)
-                    .author("AI Article Generator")
+                    .author("Sarah M.")
                     .publishedAt(java.time.LocalDateTime.now().toString())
                     .aiDetected(false)
                     .aiScore(0.0)
@@ -251,5 +195,81 @@ public class ArticleGenerationService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String buildPrompt(String input, String length, String tone, String template, String category) {
+        // Word count based on length
+        String wordCount = switch (length) {
+            case "short" -> "300-500 words";
+            case "long" -> "1500-2000 words";
+            default -> "800-1200 words";
+        };
+
+        // Tone instructions - completely human-like
+        String toneInstructions = switch (tone) {
+            case "professional" -> "Write like a seasoned professional sharing genuine expertise. Use natural language with occasional contractions, personal insights, and real-world experience. Sound like a knowledgeable friend giving advice.";
+            case "casual" -> "Write like you're talking to a close friend over coffee. Use natural speech patterns, personal stories, and everyday language. Include 'you know', 'honestly', 'I mean', and other natural expressions.";
+            case "urgent" -> "Write like someone who just discovered something important and can't wait to share it. Use natural urgency without being artificial - like a friend calling you with exciting news.";
+            case "inspirational" -> "Write like someone who genuinely cares and wants to help others succeed. Use heartfelt language, personal struggles, and authentic motivation. Sound like a mentor sharing wisdom.";
+            default -> "Write like a passionate person who loves sharing knowledge. Use natural enthusiasm, personal experiences, and genuine excitement about the topic.";
+        };
+
+        // Template instructions - human writing patterns
+        String templateInstructions = switch (template) {
+            case "howto" -> "Write like you're teaching a friend. Use natural step-by-step explanations with personal tips and 'here's what I learned' moments.";
+            case "listicle" -> "Write like you're sharing your personal favorites or discoveries. Use natural transitions between points and personal commentary.";
+            case "story" -> "Write like you're telling a story to friends. Use natural storytelling flow with personal details and authentic emotions.";
+            case "comparison" -> "Write like you're helping a friend decide between options. Use personal experience and honest opinions about each choice.";
+            default -> "Write like you're sharing something interesting you discovered. Use natural flow with personal insights and genuine interest.";
+        };
+
+        return String.format("""
+            You are a real person writing a genuine article about: "%s"
+            
+            WRITE LIKE A REAL HUMAN:
+            - Use natural, conversational language
+            - Include personal opinions and experiences
+            - Use contractions (I'm, you're, don't, can't)
+            - Include natural speech patterns and filler words
+            - Write like you're talking to a friend
+            - Use "I think", "in my experience", "honestly", "personally"
+            - Include small mistakes or natural imperfections
+            - Use varied sentence lengths and structures
+            - Include personal anecdotes and real examples
+            - Sound like a real person, not a robot
+            
+            WRITING STYLE: %s
+            TEMPLATE: %s
+            WORD COUNT: %s
+            
+            AVOID AI PATTERNS:
+            - No overly perfect structure
+            - No robotic language
+            - No generic phrases
+            - No artificial enthusiasm
+            - No perfect grammar everywhere
+            - No corporate speak
+            
+            MAKE IT SOUND HUMAN:
+            - Use natural transitions
+            - Include personal quirks and opinions
+            - Use real-world examples
+            - Include some uncertainty or "I'm not sure but..."
+            - Use natural emphasis and emphasis
+            - Include personal struggles or learning moments
+            
+            Format as JSON:
+            {
+                "title": "Natural, human-like title",
+                "subtitle": "Genuine subtitle that sounds like you wrote it", 
+                "content": "Your %s article written like a real person"
+            }
+            """, 
+            input,
+            toneInstructions,
+            templateInstructions,
+            wordCount,
+            wordCount
+        );
     }
 }
