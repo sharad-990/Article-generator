@@ -1,13 +1,20 @@
 services:
   - type: web
-    name: article-generator
-    env: java
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
+    name: article-generator-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: production
       - key: GOOGLE_AI_API_KEY
         sync: false
       - key: GOOGLE_AI_MODEL
-        value: gemini-2.5-flash
+        value: gemini-2.0-flash-lite
+      - key: MONGODB_URI
+        sync: false
+      - key: EMAIL_USERNAME
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: FRONTEND_URL
+        value: https://your-frontend-domain.com

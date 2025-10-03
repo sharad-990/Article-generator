@@ -1,82 +1,85 @@
-# 🚀 Free Deployment Guide
+# Deployment Guide for Article Generator Backend
 
-## Option 1: Render (Recommended - Easiest)
+## Render.com Docker Deployment
 
-### Backend Deployment:
-1. Push your code to GitHub
-2. Go to [render.com](https://render.com)
-3. Connect your GitHub account
-4. Click "New Web Service"
-5. Select your repository
-6. Configure:
-   - **Build Command**: `./mvnw clean package -DskipTests`
-   - **Start Command**: `java -jar target/*.jar`
-   - **Environment**: Java
-7. Add environment variables:
-   - `GOOGLE_AI_API_KEY`: Your API key
-   - `GOOGLE_AI_MODEL`: `gemini-2.5-flash`
-8. Deploy!
+This guide explains how to deploy your Spring Boot backend on Render.com using Docker.
 
-### Frontend Deployment:
-1. Go to [vercel.com](https://vercel.com)
-2. Import your GitHub repository
-3. Set **Root Directory** to `frontend`
-4. Add environment variable:
-   - `REACT_APP_API_URL`: Your Render backend URL
-5. Deploy!
+### Prerequisites
 
-## Option 2: Railway (Alternative)
+1. GitHub repository with your code
+2. Render.com account
+3. Environment variables configured
 
-1. Go to [railway.app](https://railway.app)
-2. Connect GitHub
-3. Deploy from repository
-4. Add environment variables
-5. Get your URL
+### Files Created
 
-## Option 3: Netlify + Render
+- `Dockerfile` - Docker configuration for the Spring Boot application
+- `render.yaml` - Render.com deployment configuration
 
-1. Deploy backend on Render (same as above)
-2. Deploy frontend on Netlify:
-   - Connect GitHub
-   - Set build command: `cd frontend && npm run build`
-   - Set publish directory: `frontend/build`
+### Environment Variables Required
 
-## 🔧 Configuration Updates Needed
+Set these in your Render.com dashboard:
 
-### Update Frontend API URL:
-```javascript
-// In frontend/src/components/ArticleGenerator.js
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
-const response = await fetch(`${API_BASE_URL}/api/generateArticles`, {
-```
+1. **GOOGLE_AI_API_KEY** - Your Google AI API key
+2. **MONGODB_URI** - Your MongoDB connection string
+3. **EMAIL_USERNAME** - Your email username for sending emails
+4. **EMAIL_PASSWORD** - Your email app password
+5. **FRONTEND_URL** - Your frontend application URL
 
-### Update CORS Settings:
-```properties
-# In application.properties
-spring.web.cors.allowed-origins=${FRONTEND_URL:http://localhost:3000}
-```
+### Deployment Steps
 
-## 📱 Sharing with Members
+1. **Push to GitHub**: Ensure your code is pushed to your GitHub repository
 
-Once deployed:
-1. Share the frontend URL with your members
-2. They can access it from any device
-3. No installation required
-4. Works on mobile, tablet, desktop
+2. **Connect to Render**:
+   - Go to Render.com dashboard
+   - Click "New +" → "Web Service"
+   - Connect your GitHub repository
 
-## 💡 Pro Tips
+3. **Configure Service**:
+   - **Name**: article-generator-backend
+   - **Environment**: Docker
+   - **Dockerfile Path**: ./Dockerfile
+   - **Branch**: main (or your default branch)
 
-- Use GitHub for version control
-- Set up automatic deployments
-- Monitor usage on free tiers
-- Consider upgrading if you get more users
-- Use environment variables for sensitive data
+4. **Set Environment Variables**:
+   - Add all required environment variables in the Render dashboard
+   - Make sure to mark sensitive variables as "Sync" = false
 
-## 🆓 Free Tier Limits
+5. **Deploy**:
+   - Click "Create Web Service"
+   - Render will automatically build and deploy your application
 
-- **Render**: 750 hours/month
-- **Vercel**: Unlimited static sites
-- **Netlify**: 100GB bandwidth
-- **Railway**: $5 credit monthly
+### Docker Configuration
 
-Most small teams can stay within these limits!
+The `Dockerfile` includes:
+- OpenJDK 21 base image
+- Maven installation
+- Application building
+- JAR file creation
+- Port 8080 exposure
+- Production environment configuration
+
+### Render Configuration
+
+The `render.yaml` includes:
+- Docker deployment type
+- Environment variables
+- Production profile activation
+- Service configuration
+
+### Health Check
+
+Your application will be available at:
+- `https://your-service-name.onrender.com`
+
+### Troubleshooting
+
+1. **Build Failures**: Check the build logs in Render dashboard
+2. **Environment Variables**: Ensure all required variables are set
+3. **Database Connection**: Verify MongoDB URI is correct
+4. **API Keys**: Ensure Google AI API key is valid
+
+### Monitoring
+
+- Check application logs in Render dashboard
+- Monitor resource usage
+- Set up alerts for downtime
