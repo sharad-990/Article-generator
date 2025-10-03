@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useArticleHistory } from '../contexts/ArticleHistoryContext';
+import { useCategory } from '../contexts/CategoryContext';
 import ArticleForm from './ArticleForm';
 import ArticleList from './ArticleList';
+import CategorySelector from './CategorySelector';
 import './ArticleGenerator.css';
 
 const ArticleGenerator = () => {
@@ -8,8 +11,10 @@ const ArticleGenerator = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const { addToHistory } = useArticleHistory();
+  const { selectedCategory, setSelectedCategory, getCategoryById } = useCategory();
 
-  const handleGenerateArticles = async (input) => {
+  const handleGenerateArticles = async (params) => {
     setLoading(true);
     setError(null);
     setSuccess(null);
@@ -21,7 +26,13 @@ const ArticleGenerator = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input }),
+        body: JSON.stringify({
+          input: params.input,
+          length: params.length,
+          tone: params.tone,
+          template: params.template,
+          category: selectedCategory
+        }),
       });
       
       const data = await response.json();
@@ -29,6 +40,15 @@ const ArticleGenerator = () => {
       if (data.success) {
         setArticles(data.articles);
         setSuccess(`Successfully generated ${data.articles.length} articles!`);
+        
+        // Add each article to history with category
+        data.articles.forEach(article => {
+          const articleWithCategory = {
+            ...article,
+            category: selectedCategory === 'all' ? 'Generated' : getCategoryById(selectedCategory)?.name || 'Generated'
+          };
+          addToHistory(articleWithCategory);
+        });
       } else {
         setError(data.message || 'Failed to generate articles');
       }
@@ -48,6 +68,11 @@ const ArticleGenerator = () => {
           <h1>Create Viral Articles</h1>
           <p>Generate high-quality, engaging articles that you can copy and use on any platform</p>
         </div>
+
+        <CategorySelector 
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
 
         {error && (
           <div className="alert alert-error">

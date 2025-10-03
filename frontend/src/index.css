@@ -1,3 +1,47 @@
+:root {
+  /* Ultra-Premium Dark Theme Colors - Default */
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-card: #111111;
+  --bg-glass: rgba(17, 17, 17, 0.99);
+  --bg-glass-light: rgba(17, 17, 17, 0.9);
+  --bg-glass-dark: rgba(17, 17, 17, 0.8);
+  --bg-sidebar: rgba(10, 10, 10, 0.98);
+  --bg-sidebar-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d1b69 25%, #8b5cf6 50%, #ec4899 75%, #06b6d4 100%);
+  --bg-modal: rgba(17, 17, 17, 0.99);
+  --bg-modal-overlay: rgba(0, 0, 0, 0.95);
+  --bg-nav: rgba(10, 10, 10, 0.95);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-inverse: #000000;
+  --text-accent: #8b9cff;
+  --text-gold: #fbbf24;
+  --text-platinum: #6b7280;
+  
+  --border-primary: rgba(255, 255, 255, 0.06);
+  --border-secondary: rgba(255, 255, 255, 0.03);
+  --border-accent: rgba(139, 156, 255, 0.15);
+  --border-gold: rgba(251, 191, 36, 0.25);
+  --border-platinum: rgba(107, 114, 128, 0.3);
+  
+  --shadow-primary: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-secondary: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-accent: 0 4px 16px rgba(139, 156, 255, 0.2), 0 8px 32px rgba(139, 156, 255, 0.15);
+  --shadow-luxury: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-ultra: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  
+  --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #a855f7 25%, #ec4899 50%, #f59e0b 75%, #06b6d4 100%);
+  --gradient-secondary: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6, #a855f7);
+  --gradient-luxury: linear-gradient(135deg, #8b5cf6 0%, #a855f7 20%, #ec4899 40%, #f59e0b 60%, #06b6d4 80%, #0891b2 100%);
+  --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+  --gradient-platinum: linear-gradient(135deg, #6b7280 0%, #9ca3af 50%, #d1d5db 100%);
+}
+
+/* Dark mode is now the default theme - no theme switching needed */
+
 * {
   margin: 0;
   padding: 0;
@@ -10,9 +54,56 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fafafa;
-  color: #333;
-  line-height: 1.6;
+  background: var(--gradient-secondary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  overflow-x: hidden;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Ensure all content text is white */
+.article-content p,
+.article-content div,
+.article-content span,
+.article-excerpt,
+.article-preview,
+.article-preview p,
+.article-preview div,
+.article-preview span {
+  color: #ffffff !important;
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--border-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gradient-primary);
+}
+
+/* Selection styling */
+::selection {
+  background: var(--border-accent);
+  color: var(--text-primary);
+}
+
+::-moz-selection {
+  background: var(--border-accent);
+  color: var(--text-primary);
 }
 
 code {
@@ -27,36 +118,75 @@ code {
 }
 
 .btn {
-  padding: 12px 24px;
+  padding: 16px 32px;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  letter-spacing: -0.01em;
+  box-shadow: var(--shadow-primary);
+  border: 1px solid var(--border-primary);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-secondary);
+}
+
+.btn:active {
+  transform: translateY(0);
+  transition: all 0.1s ease;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-accent);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-secondary);
 }
 
 .btn-secondary {
-  background: #6c757d;
-  color: white;
+  background: var(--bg-glass);
+  color: var(--text-accent);
+  border: 2px solid var(--border-accent);
+  box-shadow: var(--shadow-primary);
 }
 
 .btn-secondary:hover {
-  background: #5a6268;
-  transform: translateY(-1px);
+  background: var(--text-accent);
+  color: var(--text-inverse);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-accent);
 }
 
 .btn-success {
@@ -118,16 +248,16 @@ code {
 }
 
 .card {
-  background: white;
+  background: #111111;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   padding: 24px;
   margin-bottom: 20px;
-  border: 1px solid #e1e5e9;
+  border: 1px solid var(--border-primary);
 }
 
 .card-header {
-  border-bottom: 1px solid #e1e5e9;
+  border-bottom: 1px solid var(--border-primary);
   padding-bottom: 16px;
   margin-bottom: 20px;
 }
@@ -135,13 +265,30 @@ code {
 .card-title {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 8px;
+  background: var(--gradient-luxury);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  filter: drop-shadow(0 0 8px rgba(139, 156, 255, 0.3));
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% {
+    filter: drop-shadow(0 0 8px rgba(139, 156, 255, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 0 12px rgba(139, 156, 255, 0.5));
+  }
 }
 
 .card-subtitle {
   font-size: 18px;
-  color: #666;
+  color: #e5e7eb;
   font-weight: 400;
 }
 

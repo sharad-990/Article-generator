@@ -1,0 +1,181 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logo-container:hover {
+  transform: scale(1.05);
+}
+
+.logo-container:hover .logo-svg {
+  filter: drop-shadow(0 4px 12px rgba(102, 126, 234, 0.3));
+}
+
+.logo-svg {
+  width: 100%;
+  height: auto;
+  transition: all 0.3s ease;
+}
+
+.logo-text-main {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-anchor: start;
+  dominant-baseline: middle;
+}
+
+.logo-text-sub {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-anchor: start;
+  dominant-baseline: middle;
+  opacity: 0.8;
+}
+
+/* Size variants */
+.logo-container.small .logo-svg {
+  width: 120px;
+  height: 36px;
+}
+
+.logo-container.small .logo-text-main {
+  font-size: 16px;
+}
+
+.logo-container.small .logo-text-sub {
+  font-size: 8px;
+}
+
+.logo-container.medium .logo-svg {
+  width: 180px;
+  height: 54px;
+}
+
+.logo-container.medium .logo-text-main {
+  font-size: 20px;
+}
+
+.logo-container.medium .logo-text-sub {
+  font-size: 9px;
+}
+
+.logo-container.large .logo-svg {
+  width: 240px;
+  height: 72px;
+}
+
+.logo-container.large .logo-text-main {
+  font-size: 28px;
+}
+
+.logo-container.large .logo-text-sub {
+  font-size: 12px;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .logo-text-main {
+  fill: url(#gradient8-dark);
+}
+
+[data-theme="dark"] .logo-text-sub {
+  fill: url(#gradient9-dark);
+}
+
+[data-theme="dark"] .logo-svg {
+  filter: brightness(1.1) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* Animation for the writing lines */
+.writing-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 3s ease-in-out infinite;
+}
+
+.writing-line:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.writing-line:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.writing-line:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes draw {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 1000;
+  }
+}
+
+/* Floating dots animation */
+.floating-dot {
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.floating-dot:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.floating-dot:nth-child(3) {
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .logo-container.medium .logo-svg {
+    width: 150px;
+    height: 45px;
+  }
+  
+  .logo-container.medium .logo-text-main {
+    font-size: 18px;
+  }
+  
+  .logo-container.medium .logo-text-sub {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-container.medium .logo-svg {
+    width: 120px;
+    height: 36px;
+  }
+  
+  .logo-container.medium .logo-text-main {
+    font-size: 16px;
+  }
+  
+  .logo-container.medium .logo-text-sub {
+    font-size: 7px;
+  }
+}

@@ -1,57 +1,50 @@
 package com.article_generator.article_generator.controller;
 
-import com.article_generator.article_generator.dto.*;
-import com.article_generator.article_generator.service.ArticleGenerationService;
-import jakarta.validation.Valid;
+import com.article_generator.article_generator.dto.ArticleResponse;
+import com.article_generator.article_generator.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/articles")
+@CrossOrigin(origins = "*")
 public class ArticleController {
 
     @Autowired
-    private ArticleGenerationService articleGenerationService;
+    private ArticleService articleService;
 
-    @PostMapping("/generateArticles")
-    public ResponseEntity<ArticleGenerationResponse> generateArticles(
-            @Valid @RequestBody ArticleGenerationRequest request) {
-        try {
-            // Additional validation
-            if (request.getInput() == null || request.getInput().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(ArticleGenerationResponse.builder()
-                    .articles(List.of())
-                    .success(false)
-                    .message("Input text is required and cannot be empty")
-                    .build());
-            }
-            
-            List<ArticleResponse> articles = articleGenerationService.generateArticles(request.getInput().trim());
-            
-            return ResponseEntity.ok(ArticleGenerationResponse.builder()
-                .articles(articles)
-                .success(true)
-                .message("Articles generated successfully")
-                .build());
-                
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.ok(ArticleGenerationResponse.builder()
-                .articles(List.of())
-                .success(false)
-                .message("Error generating articles: " + e.getMessage())
-                .build());
-        }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ArticleResponse>> getUserArticles(@PathVariable String userId) {
+        List<ArticleResponse> articles = articleService.getUserArticles(userId);
+        return ResponseEntity.ok(articles);
     }
 
+    @GetMapping("/user/{userId}/favorites")
+    public ResponseEntity<List<ArticleResponse>> getUserFavorites(@PathVariable String userId) {
+        List<ArticleResponse> articles = articleService.getUserFavorites(userId);
+        return ResponseEntity.ok(articles);
+    }
 
-    @GetMapping("/health")
-    public ResponseEntity<Map<String, String>> health() {
-        return ResponseEntity.ok(Map.of("status", "UP", "message", "Article Generator API is running"));
+    @GetMapping("/user/{userId}/category/{category}")
+    public ResponseEntity<List<ArticleResponse>> getUserArticlesByCategory(
+            @PathVariable String userId, 
+            @PathVariable String category) {
+        List<ArticleResponse> articles = articleService.getUserArticlesByCategory(userId, category);
+        return ResponseEntity.ok(articles);
+    }
+
+    @PostMapping("/{articleId}/toggle-favorite")
+    public ResponseEntity<String> toggleFavorite(@PathVariable String articleId, @RequestParam String userId) {
+        articleService.toggleFavorite(articleId, userId);
+        return ResponseEntity.ok("Favorite status updated");
+    }
+
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity<String> deleteUserArticles(@PathVariable String userId) {
+        articleService.deleteUserArticles(userId);
+        return ResponseEntity.ok("User articles deleted");
     }
 }

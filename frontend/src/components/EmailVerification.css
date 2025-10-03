@@ -1,0 +1,120 @@
+.email-verification {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.verification-container {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.verifying {
+  color: #667eea;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.success {
+  color: #28a745;
+}
+
+.success-icon {
+  font-size: 60px;
+  color: #28a745;
+  margin-bottom: 20px;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.error-icon {
+  font-size: 60px;
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+p {
+  margin-bottom: 20px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.user-info {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.user-info p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.login-button,
+.resend-button,
+.register-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover,
+.resend-button:hover,
+.register-button:hover {
+  background: #5a6fd8;
+}
+
+.resend-button {
+  background: #ffc107;
+  color: #212529;
+}
+
+.resend-button:hover {
+  background: #e0a800;
+}
+
+.register-button {
+  background: #6c757d;
+}
+
+.register-button:hover {
+  background: #5a6268;
+}
